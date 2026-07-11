@@ -269,7 +269,15 @@ export const generateCompositeImage = async (
     dropPosition: { xPercent: number; yPercent: number; }
 ): Promise<{ finalImageUrl: string; debugImageUrl: string; finalPrompt: string; }> => {
   console.log('Starting multi-step image generation process...');
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Gemini API key is missing");
+}
+
+const ai = new GoogleGenAI({
+  apiKey
+});
 
   // Get original scene dimensions for final cropping and correct marker placement
   const { width: originalWidth, height: originalHeight } = await getImageDimensions(environmentImage);
